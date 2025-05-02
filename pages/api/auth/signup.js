@@ -75,7 +75,7 @@ export default async function handler(req, res) {
       avatar: result.secure_url,
     });
 
-    return res.status(201).json({ message: "Signup successful" });
+    return res.status(201).json({ message: "Signup successful", user });
   } catch (err) {
     console.error(err);
     await unlink(file.path);

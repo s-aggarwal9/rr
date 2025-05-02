@@ -33,6 +33,7 @@ export default function SignupPage() {
     });
 
     const result = await res.json();
+    console.log("result", result, "response", res);
     setLoading(false);
 
     if (res.ok) {
