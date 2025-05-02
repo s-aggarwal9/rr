@@ -4,99 +4,87 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const router = useRouter();
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    avatar: null,
-  });
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [avatar, setAvatar] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const router = useRouter();
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "avatar") {
-      setForm((prev) => ({ ...prev, avatar: files[0] }));
-    } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
-    }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setAvatar(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     const data = new FormData();
     data.append("username", form.username);
     data.append("email", form.email);
     data.append("password", form.password);
-    data.append("avatar", form.avatar);
+    data.append("avatar", avatar);
 
-    try {
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        body: data,
-      });
+    const res = await fetch("/api/auth/signup", {
+      method: "POST",
+      body: data,
+    });
 
-      const result = await res.json();
+    const result = await res.json();
+    setLoading(false);
 
-      if (!res.ok) {
-        throw new Error(result.message || "Signup failed");
-      }
-
+    if (res.ok) {
+      alert("Signup successful!");
       router.push("/login");
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+    } else {
+      alert(result.message || "Signup failed");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-4">Create Account</h2>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+    <div className="flex items-center justify-center min-h-screen">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4 p-6 bg-white rounded shadow w-full max-w-sm"
+      >
+        <h1 className="text-xl font-bold text-black">Signup</h1>
         <input
-          type="text"
           name="username"
           placeholder="Username"
-          required
-          className="w-full mb-3 p-2 border rounded"
           onChange={handleChange}
+          required
+          className="w-full p-2 border rounded text-black"
         />
         <input
-          type="email"
           name="email"
+          type="email"
           placeholder="Email"
-          required
-          className="w-full mb-3 p-2 border rounded"
           onChange={handleChange}
+          required
+          className="w-full p-2 border rounded text-black"
         />
         <input
-          type="password"
           name="password"
+          type="password"
           placeholder="Password"
-          required
-          className="w-full mb-3 p-2 border rounded"
           onChange={handleChange}
+          required
+          className="w-full p-2 border rounded text-black"
         />
         <input
           type="file"
-          name="avatar"
           accept="image/*"
+          onChange={handleFileChange}
           required
-          className="w-full mb-3 p-2 border rounded"
-          onChange={handleChange}
+          className="w-full"
         />
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
         <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
           disabled={loading}
+          className="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600"
         >
-          {loading ? "Creating..." : "Sign Up"}
+          {loading ? "Creating..." : "Signup"}
         </button>
       </form>
     </div>
