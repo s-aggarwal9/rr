@@ -40,12 +40,12 @@ export default async function HomePage() {
               >
                 🔍 Search Users
               </Link>
-              <a
+              <Link
                 href="/chats"
                 className="block bg-green-500 text-white py-2 rounded hover:bg-green-600"
               >
                 💬 View Chats
-              </a>
+              </Link>
               <a
                 href="/logout"
                 className="block bg-red-500 text-white py-2 rounded hover:bg-red-600"
