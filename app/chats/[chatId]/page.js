@@ -1,4 +1,5 @@
 // app/chats/[chatId]/page.js
+
 import { dbConnect } from "@/lib/db";
 import { cookies } from "next/headers";
 import { verifyJwt } from "@/lib/jwt";
@@ -12,14 +13,14 @@ export default async function ChatPage({ params }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  //   const token = cookies().get("token")?.value;
   const userData = await verifyJwt(token);
+  const { chatId } = await params; // Await params to resolve chatId
 
   if (!userData) {
     return <div className="text-center mt-10 text-red-500">Unauthorized</div>;
   }
 
-  const chat = await Chat.findById(params.chatId)
+  const chat = await Chat.findById(chatId)
     .populate("participants", "username avatar")
     .lean();
 
@@ -56,10 +57,10 @@ export default async function ChatPage({ params }) {
               className={`p-2 rounded ${
                 msg.sender._id.toString() === userData.id
                   ? "bg-blue-100 text-right"
-                  : "bg-gray-100 text-left"
+                  : "bg-gray-200 text-left"
               }`}
             >
-              <div className="text-xs text-black">{msg.sender.username}</div>
+              <div className="text-xs text-gray-600">{msg.sender.username}</div>
               <div className="text-black">{msg.content}</div>
             </div>
           ))}
