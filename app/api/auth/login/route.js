@@ -48,7 +48,9 @@ export async function POST(req) {
     );
   }
 
-  const token = await generateToken({ id: user._id });
+  // const token = await generateToken({ id: user._id });
+
+  const token = await generateToken({ id: user._id.toString() });
 
   const response = NextResponse.json(
     { message: "Login successful" },

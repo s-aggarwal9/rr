@@ -6,6 +6,8 @@ const chatSchema = new mongoose.Schema(
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     groupName: { type: String },
     groupAvatar: { type: String },
+    groupDescription: { type: String }, // optional future use
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // admin
     latestMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
   },
   { timestamps: true }

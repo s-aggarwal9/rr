@@ -10,6 +10,11 @@ const messageSchema = new mongoose.Schema(
     },
     content: { type: String },
     attachment: { type: String }, // Cloudinary URL (if any)
+    messageType: {
+      type: String,
+      enum: ["text", "image", "video", "audio", "file"],
+      default: "text",
+    },
     replyTo: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
     reactions: [
       {
@@ -19,8 +24,19 @@ const messageSchema = new mongoose.Schema(
     ],
     readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    validateBeforeSave: true,
+  }
 );
+
+// Ensure either content or attachment is present
+messageSchema.pre("validate", function (next) {
+  if (!this.content && !this.attachment) {
+    this.invalidate("content", "Message must have either text or attachment.");
+  }
+  next();
+});
 
 export default mongoose.models.Message ||
   mongoose.model("Message", messageSchema);

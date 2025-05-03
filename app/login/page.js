@@ -29,14 +29,14 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.message || "Login failed");
 
       if (res.ok) {
-        console.log("login success, pushing to chat");
+        console.log("login success, pushing to home");
 
         const socket = getSocket();
 
         socket.on("connect", () => {
           console.log("Socket connected after login:", socket.id);
         });
-        router.push("/chat");
+        router.push("/");
       }
     } catch (err) {
       console.error("Login error:", err);
