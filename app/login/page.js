@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { getSocket } from "@/utils/socket";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,13 @@ export default function LoginPage() {
       if (!res.ok) throw new Error(data.message || "Login failed");
 
       if (res.ok) {
-        console.log("pushing to chat");
+        console.log("login success, pushing to chat");
+
+        const socket = getSocket();
+
+        socket.on("connect", () => {
+          console.log("Socket connected after login:", socket.id);
+        });
         router.push("/chat");
       }
     } catch (err) {
@@ -38,6 +45,25 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  // wherever you handle login (e.g., in LoginForm.js)
+
+  // const handleLogin = async (formData) => {
+  //   const res = await fetch("/api/auth/login", {
+  //     method: "POST",
+  //     body: JSON.stringify(formData),
+  //     headers: { "Content-Type": "application/json" },
+  //   });
+
+  //   if (res.ok) {
+  //     console.log("Login success");
+
+  //     // optional: navigate or show dashboard
+  //   } else {
+  //     const err = await res.json();
+  //     console.error("Login failed", err);
+  //   }
+  // };
 
   //   const handleSubmit = async (e) => {
   //     e.preventDefault();

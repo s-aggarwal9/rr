@@ -55,7 +55,8 @@ export async function POST(req) {
     { status: 200 }
   );
   response.cookies.set("token", token, {
-    httpOnly: true,
+    httpOnly: false,
+    // httpOnly: true, yeh nautanki karta rehta.
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
