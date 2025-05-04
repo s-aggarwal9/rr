@@ -6,6 +6,8 @@ import { verifyJwt } from "@/lib/jwt";
 import Chat from "@/models/Chat.model";
 import Message from "@/models/Message.model";
 import User from "@/models/User.model";
+import dynamic from "next/dynamic";
+import { Playwrite_US_Trad_Guides } from "next/font/google";
 
 export default async function ChatPage({ params }) {
   await dbConnect();
@@ -15,6 +17,8 @@ export default async function ChatPage({ params }) {
 
   const userData = await verifyJwt(token);
   const { chatId } = await params; // Await params to resolve chatId
+
+  const MessageForm = dynamic(() => import("@/components/chat/MessageForm"));
 
   if (!userData) {
     return <div className="text-center mt-10 text-red-500">Unauthorized</div>;
@@ -66,7 +70,15 @@ export default async function ChatPage({ params }) {
           ))}
         </div>
 
-        <form
+        <MessageForm
+          chatId={chat._id.toString()}
+          sender={userData.id.toString()}
+          recipient={chat.participants
+            .find((p) => p._id !== userData.id)
+            ._id.toString()}
+        />
+
+        {/* <form
           action={`/api/chats/${chat._id}/messages`}
           method="POST"
           className="mt-4 flex"
@@ -83,7 +95,7 @@ export default async function ChatPage({ params }) {
           >
             Send
           </button>
-        </form>
+        </form> */}
       </div>
     </main>
   );
