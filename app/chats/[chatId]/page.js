@@ -19,6 +19,8 @@ export default async function ChatPage({ params }) {
 
   const MessageForm = dynamic(() => import("@/components/chat/MessageForm"));
 
+  const MessageList = dynamic(() => import("@/components/chat/MessageList"));
+
   if (!userData) {
     return <div className="text-center mt-10 text-red-500">Unauthorized</div>;
   }
@@ -43,6 +45,9 @@ export default async function ChatPage({ params }) {
     .sort({ createdAt: 1 })
     .lean();
 
+  // console.log("Fetched messages:", messages);
+  // console.log(JSON.parse(JSON.stringify(messages)));
+
   return (
     <main className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-2xl mx-auto bg-white rounded shadow p-4">
@@ -52,7 +57,12 @@ export default async function ChatPage({ params }) {
             : chat.participants.find((u) => u._id.toString() !== userData.id)
                 ?.username}
         </h1>
-        <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+        <MessageList
+          chatId={chatId}
+          userId={userData.id}
+          initialMessages={JSON.parse(JSON.stringify(messages))}
+        />
+        {/* <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {messages.map((msg) => (
             <div
               key={msg._id}
@@ -66,7 +76,7 @@ export default async function ChatPage({ params }) {
               <div className="text-black">{msg.content}</div>
             </div>
           ))}
-        </div>
+        </div> */}
         <MessageForm
           chatId={chat._id.toString()}
           sender={userData.id.toString()}
