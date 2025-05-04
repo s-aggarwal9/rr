@@ -7,7 +7,6 @@ import Chat from "@/models/Chat.model";
 import Message from "@/models/Message.model";
 import User from "@/models/User.model";
 import dynamic from "next/dynamic";
-import { Playwrite_US_Trad_Guides } from "next/font/google";
 
 export default async function ChatPage({ params }) {
   await dbConnect();
@@ -53,7 +52,6 @@ export default async function ChatPage({ params }) {
             : chat.participants.find((u) => u._id.toString() !== userData.id)
                 ?.username}
         </h1>
-
         <div className="space-y-2 max-h-[60vh] overflow-y-auto">
           {messages.map((msg) => (
             <div
@@ -69,12 +67,11 @@ export default async function ChatPage({ params }) {
             </div>
           ))}
         </div>
-
         <MessageForm
           chatId={chat._id.toString()}
           sender={userData.id.toString()}
           recipient={chat.participants
-            .find((p) => p._id !== userData.id)
+            .find((p) => p._id.toString() !== userData.id)
             ._id.toString()}
         />
 
