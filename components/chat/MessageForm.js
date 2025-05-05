@@ -2,30 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { useSocket } from "@/context/SocketContext";
-// import { getSocket } from "@/utils/socket"; // ensure your client socket hook is here
 
 export default function MessageForm({ chatId, sender, recipient }) {
   const [message, setMessage] = useState("");
   const socket = useSocket();
 
   useEffect(() => {
-    //   socket.on("receive-message", ({ from, message }) => {
-    //     console.log("💬 Received message from", from, ":", message);
-    //   });
+    if (!socket) return;
 
     socket.on("receive-message", ({ chatId, from, content }) => {
       console.log("💬 Received:", { chatId, from, content });
-      // TODO: Push to state or re-fetch messages
     });
 
     return () => {
       socket.off("receive-message");
     };
-  }, []);
+  }, [socket]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!message.trim()) return;
 
     const newMessage = {
@@ -35,18 +30,10 @@ export default function MessageForm({ chatId, sender, recipient }) {
       content: message.trim(),
     };
 
-    // console.log(
-    //   "message form",
-    //   newMessage,
-    //   "sender",
-    //   sender,
-    //   "recipient",
-    //   recipient,
-    //   "chatId",
-    //   chatId
-    // );
+    if (socket) {
+      socket.emit("send-message", newMessage);
+    }
 
-    socket.emit("send-message", newMessage);
     setMessage("");
   };
 
