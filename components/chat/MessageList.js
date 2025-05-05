@@ -15,26 +15,29 @@ const MessageList = ({ chatId, userId, initialMessages }) => {
 
     socket.emit("join-room", chatId);
 
-    socket.on("receive-message", ({ chatId: socketChatId, from, content }) => {
-      console.log(
-        "socket on recieve console",
-        socketChatId,
-        from,
-        content,
-        chatId
-      );
-      if (socketChatId === chatId) {
-        console.log("updating messages");
-        setMessages((prev) => [
-          ...prev,
-          {
-            sender: { _id: from, username: "radhe" },
-            content,
-            _id: messages.length + 1,
-          },
-        ]);
+    socket.on(
+      "receive-message",
+      ({ chatId: socketChatId, from, content, username }) => {
+        console.log(
+          "socket on recieve console",
+          socketChatId,
+          from,
+          content,
+          chatId
+        );
+        if (socketChatId === chatId) {
+          console.log("updating messages");
+          setMessages((prev) => [
+            ...prev,
+            {
+              sender: { _id: from, username },
+              content,
+              _id: messages.length + 1,
+            },
+          ]);
+        }
       }
-    });
+    );
 
     return () => {
       socket.off("new-message");
