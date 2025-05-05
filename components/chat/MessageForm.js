@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getSocket } from "@/utils/socket"; // ensure your client socket hook is here
+import { useSocket } from "@/context/SocketContext";
+// import { getSocket } from "@/utils/socket"; // ensure your client socket hook is here
 
 export default function MessageForm({ chatId, sender, recipient }) {
   const [message, setMessage] = useState("");
-  const socket = getSocket();
+  const socket = useSocket();
 
   useEffect(() => {
     //   socket.on("receive-message", ({ from, message }) => {

@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getSocket } from "@/utils/socket";
+import { useSocket } from "@/context/SocketContext";
+// import { getSocket } from "@/utils/socket";
 // import Message from "@/models/Message.model";
 
 const MessageList = ({ chatId, userId, initialMessages }) => {
   //   const [messages, setMessages] = useState([]);
   const [messages, setMessages] = useState(initialMessages);
-  const socket = getSocket();
+  const socket = useSocket();
 
   useEffect(() => {
     console.log("messageList socket", socket);

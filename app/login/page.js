@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { getSocket } from "@/utils/socket";
+import { useSocket } from "@/context/SocketContext";
+// import { getSocket } from "@/utils/socket";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function LoginPage() {
       if (res.ok) {
         console.log("login success, pushing to home");
 
-        const socket = getSocket();
+        const socket = await useSocket();
 
         socket.on("connect", () => {
           console.log("Socket connected after login:", socket.id);
